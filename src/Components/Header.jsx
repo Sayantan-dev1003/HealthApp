@@ -43,24 +43,24 @@ function App() {
   };
 
   const handleLoginSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData); 
-    
+    const data = Object.fromEntries(formData);
+
     const response = await fetch('/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data), 
+      body: JSON.stringify(data),
     });
     console.log(response)
 
     if (response.ok) {
       const result = await response.json();
       toast.success(result.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined });
-      navigate('/dashboard'); 
+      navigate('/dashboard');
     } else {
       const error = await response.json();
-      toast.error("Login failed: " + error.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined }); 
+      toast.error("Login failed: " + error.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined });
     }
   };
 

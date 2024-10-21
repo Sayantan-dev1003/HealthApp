@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Table = () => {
     const [doctorArr, setDoctorArr] = useState([]);
     const [patients, setPatients] = useState([]);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDoctor = async () => {
@@ -14,7 +14,7 @@ const Table = () => {
                     credentials: 'include',
                 });
                 const data = await response.json();
-                setDoctorArr(Object.values(data.patients)); 
+                setDoctorArr(Object.values(data.patients));
             } catch (error) {
                 console.error("Error fetching doctor data", error);
             }
@@ -32,7 +32,7 @@ const Table = () => {
                     doctorArr.some(doctor => doctor === patient._id)
                 );
 
-                setPatients(filteredPatients); 
+                setPatients(filteredPatients);
             } catch (error) {
                 console.error("Error fetching patients data", error);
             }
@@ -40,13 +40,13 @@ const Table = () => {
 
         fetchDoctor();
         fetchPatientInfo();
-    }, [doctorArr]); 
+    }, [doctorArr]);
 
     return (
         <div className="container mx-auto p-4 montserrat">
             <div className="w-[60vw] flex justify-between">
                 <button
-                    onClick={() => navigate('/dashboard')} 
+                    onClick={() => navigate('/dashboard')}
                     className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                 >
                     Back

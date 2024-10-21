@@ -48,7 +48,7 @@ const Tests = () => {
                     doctorArr.some(doctor => doctor === patient._id)
                 );
 
-                setPatients(filteredPatients); 
+                setPatients(filteredPatients);
                 const totalPatients = patients.length;
                 let ac = 0, bc = 0, dc = 0, sc = 0;
 

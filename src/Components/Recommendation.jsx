@@ -20,7 +20,7 @@ const Recommendation = () => {
         const fetchRecommendations = async () => {
             try {
                 const formData = new FormData();
-                formData.append('file', file); // Replace with the actual file if needed
+                formData.append('file', file);
                 formData.append('model_name', testType);
 
                 const response = await axios.post('http://localhost:5000/predict', formData, {

@@ -8,7 +8,7 @@ const SideBarDash = () => {
     const logout = async () => {
         try {
             await fetch('/logout', { method: 'GET', credentials: 'include' });
-            window.location.href = '/'; 
+            window.location.href = '/';
         } catch (error) {
             console.error("Logout failed:", error);
         }

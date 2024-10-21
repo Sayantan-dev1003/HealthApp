@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
-const  ServiceCard = ({ title, description, icon }) => {
+const ServiceCard = ({ title, description, icon }) => {
     return (
         <>
             <div className="bg-indigo-50 rounded-lg p-6 flex items-start">

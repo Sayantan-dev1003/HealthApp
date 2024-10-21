@@ -8,10 +8,10 @@ import { useEffect } from 'react';
 const Services = () => {
     useEffect(() => {
         AOS.init({
-          duration: 2000,
-          once: true
+            duration: 2000,
+            once: true
         });
-      }, []);
+    }, []);
     return (
         <>
             <div className="bg-customGradient1 min-h-screen pt-24 pb-12 px-12 w-full montserrat">

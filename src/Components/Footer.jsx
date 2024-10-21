@@ -6,7 +6,6 @@ const Footer = () => {
   return (
     <footer className="bg-green-950 text-green-500 w-full px-12 montserrat text-sm pt-16 pb-8">
       <div className="flex justify-between items-start gap-10">
-        {/* Company Info */}
         <div className='flex flex-col w-1/4'>
           <h3 className="text-lg font-semibold mb-4">MindScan</h3>
           <p className="text-gray-400">
@@ -14,7 +13,6 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Quick Links */}
         <div className='flex flex-col w-1/4 justify-center items-center'>
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2">
@@ -25,7 +23,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Contact Info */}
         <div className='flex flex-col w-1/4'>
           <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
           <p className="text-gray-400">Ahmedabad, Gujarat, India</p>
@@ -33,7 +30,6 @@ const Footer = () => {
           <p className="text-gray-400">Email: info@mindscan.com</p>
         </div>
 
-        {/* Newsletter Signup */}
         <div className='flex flex-col w-1/4'>
           <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
           <form className="flex">
@@ -52,7 +48,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Social Media Links */}
       <div className="mt-8 pt-8 border-t border-gray-700 flex flex-col sm:flex-row justify-between items-center">
         <p className="text-gray-400 text-sm mb-4 sm:mb-0">
           © 2024 MindScan. All rights reserved.
