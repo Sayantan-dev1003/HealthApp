@@ -19,19 +19,41 @@ const Tests = () => {
     const [depression, setDepression] = useState(0);
     const [schizophrenia, setSchizophrenia] = useState(0);
 
-    useEffect(() => { 
-        const fetchPatientData = async () => {
+    const [doctorArr, setDoctorArr] = useState([]);
+    const [patients, setPatients] = useState([]);
+
+    useEffect(() => {
+        const fetchDoctor = async () => {
             try {
-                const response = await fetch('/patients', {
+                const response = await fetch('/doctor', {
                     method: 'GET',
                     credentials: 'include',
                 });
                 const data = await response.json();
-                const totalPatients = data.length;
+                setDoctorArr(Object.values(data.patients));
+            } catch (error) {
+                console.error("Error fetching doctor data", error);
+            }
+        };
+
+        const fetchPatientData = async () => {
+            try {
+                const response = await fetch('/patientInfo', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+
+                const filteredPatients = data.filter(patient =>
+                    doctorArr.some(doctor => doctor === patient._id)
+                );
+
+                setPatients(filteredPatients); 
+                const totalPatients = patients.length;
                 let ac = 0, bc = 0, dc = 0, sc = 0;
-    
+
                 // Count the number of patients for each test type
-                data.forEach(patient => {
+                patients.forEach(patient => {
                     switch (patient.testType) {
                         case 'anxiety':
                             ac++;
@@ -49,21 +71,22 @@ const Tests = () => {
                             break;
                     }
                 });
-    
+
                 // Calculate percentages
                 setAnxiety(totalPatients ? (ac / totalPatients) * 100 : 0);
                 setBipolar(totalPatients ? (bc / totalPatients) * 100 : 0);
                 setDepression(totalPatients ? (dc / totalPatients) * 100 : 0);
                 setSchizophrenia(totalPatients ? (sc / totalPatients) * 100 : 0);
                 console.log(ac, bc, dc, sc, totalPatients);
-    
+
             } catch (error) {
                 console.error("Error fetching patient data", error);
             }
         };
-    
+
+        fetchDoctor();
         fetchPatientData();
-    }, []);
+    }, [doctorArr]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
