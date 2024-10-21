@@ -119,6 +119,60 @@ app.post("/patients", upload.single('file'), async (req, res) => {
     }
 });
 
+app.get("/patients", async (req, res) => {
+    try {
+        const patients = await patientModel.find({}, 'testType');
+        res.status(200).json(patients);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching patient data", error });
+    }
+});
+
+app.get("/patientInfo", async (req, res) => {
+    try {
+        const patients = await patientModel.find({});
+        res.status(200).json(patients);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching patient data", error });
+    }
+});
+
+app.get("/doctor", async (req, res) => {
+    const token = req.cookies.token; 
+    if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
+
+    let doctorEmail;
+    try {
+        const decoded = jwt.verify(token, "Sayantan"); 
+        doctorEmail = decoded.email; 
+    } catch (error) {
+        return res.status(401).json({ message: "Unauthorized: Invalid token", error: error });
+    }
+
+    const doctor = await userModel.findOne({ email: doctorEmail }, 'patients');
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+    res.status(200).json(doctor);
+});
+
+app.get("/doctorName", async (req, res) => {
+    const token = req.cookies.token; 
+    if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
+
+    let doctorEmail;
+    try {
+        const decoded = jwt.verify(token, "Sayantan"); 
+        doctorEmail = decoded.email; 
+    } catch (error) {
+        return res.status(401).json({ message: "Unauthorized: Invalid token", error: error });
+    }
+
+    const doctor = await userModel.findOne({ email: doctorEmail }, 'name');
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+    res.status(200).json(doctor);
+});
+
 app.get("/logout", (req, res) => {
     res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
     res.redirect("/");

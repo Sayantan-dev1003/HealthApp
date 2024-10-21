@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Circle } from "rc-progress"
 import { useNavigate } from "react-router-dom";
 
@@ -14,38 +14,56 @@ const Tests = () => {
 
     const navigate = useNavigate();
 
-    const [percentages, setPercentages] = useState({
-        anxiety: 0,
-        bipolar: 0,
-        depression: 0,
-        schizophrenia: 0,
-    });
+    const [anxiety, setAnxiety] = useState(0);
+    const [bipolar, setBipolar] = useState(0);
+    const [depression, setDepression] = useState(0);
+    const [schizophrenia, setSchizophrenia] = useState(0);
 
-    const fetchPatientData = async () => {
-        try {
-            const response = await fetch('/patients', { credentials: 'include' });
-            const data = await response.json();
-            const totalPatients = data.length;
-
-            const anxietyCount = data.filter(patient => patient.testType === 'anxiety').length;
-            const bipolarCount = data.filter(patient => patient.testType === 'bipolar disorder').length;
-            const depressionCount = data.filter(patient => patient.testType === 'depression').length;
-            const schizophreniaCount = data.filter(patient => patient.testType === 'schizophrenia').length;
-
-            const newPercentages = {
-                anxiety: ((anxietyCount / totalPatients) * 100) || 0,
-                bipolar: ((bipolarCount / totalPatients) * 100) || 0,
-                depression: ((depressionCount / totalPatients) * 100) || 0,
-                schizophrenia: ((schizophreniaCount / totalPatients) * 100) || 0,
+    useEffect(() => { 
+        const fetchPatientData = async () => {
+            try {
+                const response = await fetch('/patients', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                const totalPatients = data.length;
+                let ac = 0, bc = 0, dc = 0, sc = 0;
+    
+                // Count the number of patients for each test type
+                data.forEach(patient => {
+                    switch (patient.testType) {
+                        case 'anxiety':
+                            ac++;
+                            break;
+                        case 'bipolar':
+                            bc++;
+                            break;
+                        case 'depression':
+                            dc++;
+                            break;
+                        case 'schizophrenia':
+                            sc++;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+    
+                // Calculate percentages
+                setAnxiety(totalPatients ? (ac / totalPatients) * 100 : 0);
+                setBipolar(totalPatients ? (bc / totalPatients) * 100 : 0);
+                setDepression(totalPatients ? (dc / totalPatients) * 100 : 0);
+                setSchizophrenia(totalPatients ? (sc / totalPatients) * 100 : 0);
+                console.log(ac, bc, dc, sc, totalPatients);
+    
+            } catch (error) {
+                console.error("Error fetching patient data", error);
             }
-
-            setPercentages(newPercentages);
-            console.log(newPercentages);
-        } catch (error) {
-            console.log("Error fetching patient data:", error);
-        }
-    };
-    fetchPatientData();
+        };
+    
+        fetchPatientData();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,7 +83,6 @@ const Tests = () => {
                 body: formData,
                 credentials: 'include',
             });
-            const data = await response.json();
             if (response.ok) {
                 alert('Patient data submitted successfully');
                 setPatientType('new');
@@ -76,7 +93,7 @@ const Tests = () => {
                 setTestType('');
                 setContact('');
                 setFile(null);
-                navigate('/recommendation', { state: { testType } });
+                navigate('/recommendation', { state: { testType, file } });
             } else {
                 alert('Error submitting patient data');
             }
@@ -91,26 +108,26 @@ const Tests = () => {
                 <div className="flex justify-evenly items-center w-full montserrat px-8 text-xs">
                     <div className="px-8 py-5 shadow-lg w-[80%]">
                         <p className="text-xl font-semibold">Patient&apos;s Records:</p>
-                        <div className="flex justify-between items-center gap-10 px-12 py-2">
-                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative">
-                                <Circle percent={percentages.anxiety} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
+                        <div className="flex justify-between items-center gap-4 px-12 py-2">
+                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative px-5 py-2 rounded-lg hover:scale-105 hover:shadow-lg">
+                                <Circle percent={anxiety} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
                                 <p>Anxiety</p>
-                                <p className="absolute top-[3.2rem] text-lg font-semibold">{percentages.anxiety} %</p>
+                                <p className="absolute top-[3.2rem] text-lg font-semibold">{anxiety} %</p>
                             </div>
-                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative">
-                                <Circle percent={percentages.bipolar} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
+                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative px-5 py-2 rounded-lg hover:scale-105 hover:shadow-lg">
+                                <Circle percent={bipolar} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
                                 <p>Bipolar Disorder</p>
-                                <p className="absolute top-[3.2rem] text-lg font-semibold">{percentages.bipolar} %</p>
+                                <p className="absolute top-[3.2rem] text-lg font-semibold">{bipolar} %</p>
                             </div>
-                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative">
-                                <Circle percent={percentages.depression} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
+                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative px-5 py-2 rounded-lg hover:scale-105 hover:shadow-lg">
+                                <Circle percent={depression} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
                                 <p>Depression</p>
-                                <p className="absolute top-[3.2rem] text-lg font-semibold">{percentages.depression} %</p>
+                                <p className="absolute top-[3.2rem] text-lg font-semibold">{depression} %</p>
                             </div>
-                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative">
-                                <Circle percent={percentages.schizophrenia} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
+                            <div className="w-1/4 h-auto flex justify-center items-center flex-col gap-4 relative px-5 py-2 rounded-lg hover:scale-105 hover:shadow-lg">
+                                <Circle percent={schizophrenia} strokeColor="darkgreen" strokeWidth={10} trailColor="lightgreen" trailWidth={10} strokeLinecap="square" />
                                 <p>Schizophrenia</p>
-                                <p className="absolute top-[3.2rem] text-lg font-semibold">{percentages.schizophrenia} %</p>
+                                <p className="absolute top-[3.2rem] text-lg font-semibold">{schizophrenia} %</p>
                             </div>
                         </div>
                     </div>
