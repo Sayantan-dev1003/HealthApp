@@ -29,7 +29,8 @@ flaskServer/venv/
 flaskServer/__pycache__/
 
 # === ML Models ===
-flaskServer/mlModels/
+flaskServer/mlModels/models
+flaskServer/mlModels/scaler
 
 # === Uploads / Data ===
 uploads/
